@@ -28,9 +28,6 @@ public class Command {
 			Axis axis = MapUtils.getAxis(plugin.getPlayerAxisMap(), player);
 			if(axis != null && axis.getPoint1() != null && axis.getPoint2() != null) {				
 				if(Args.length >= 3 && Args[2] != null && Args[2].trim().length() > 0) {
-					// ./dg saveregion <name>
-					
-					//Manager.saveRegion(plugin, player.getWorld().getName(), axis, Args[2], "[]");
 					
 					Vector bVecPos1 = new Vector(axis.getPoint1().getBlockX(), axis.getPoint1().getBlockY(),
 							axis.getPoint1().getBlockZ());
@@ -147,11 +144,7 @@ public class Command {
 							player.sendMessage("Failed to remove " + String.valueOf(count) + " Players from Region '" + rgn.getRegionName() + "'");
 						}
 						return true;
-					} else {
-						//add Single
 					}
-				} else {
-					//Add single player
 				}
 				rgn.removeUser(Players);
 

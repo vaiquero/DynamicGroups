@@ -34,14 +34,11 @@ public class DynamicGroups extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
-		
+		//Clear all Arrays, List's & Maps
 	}
 
 	@Override
 	public void onEnable() {
-		// TODO Auto-generated method stub
-
 		String Dir = "plugins/DynamicGroups";
 		File workDir = new File(Dir);
 		if(!workDir.exists()) {
@@ -103,8 +100,6 @@ public class DynamicGroups extends JavaPlugin {
 		}
 		
 		gRegion.setUserList(users);
-				
-		//writeConsole("Loading Region '" + gRegion.getRegionName() + "'");
 				
 		return gRegion;
 	}
