@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.craftmin.bukkit.DynamicGroups;
 import com.craftmin.bukkit.misc.Axis;
 import com.craftmin.bukkit.misc.MapUtils;
+import com.craftmin.bukkit.misc.Utils;
 
 public class EventParser implements Runnable {
 	
@@ -44,14 +45,18 @@ public class EventParser implements Runnable {
 							if(playerAxis == null) {
 								playerAxis = new Axis();
 							}
-							if(interactEvent.getAction() == Action.LEFT_CLICK_BLOCK) {
-								playerAxis.setPoint1(interactEvent.getClickedBlock().getLocation());
-								ply.sendMessage("§4Set First Position (" + playerAxis.getPoint1().toString() + ")");
-							} else if(interactEvent.getAction() == Action.RIGHT_CLICK_BLOCK) {
-								playerAxis.setPoint2(interactEvent.getClickedBlock().getLocation());
-								ply.sendMessage("§4Set Second Position (" + playerAxis.getPoint2().toString() + ")");
+
+							int ToolID = plugin.getSettings().getSelectionToolID();
+							if(ply.getItemInHand().getTypeId() == ToolID) {
+								if(interactEvent.getAction() == Action.LEFT_CLICK_BLOCK) {
+									playerAxis.setPoint1(interactEvent.getClickedBlock().getLocation());
+									ply.sendMessage("§4Set First Position (" + Utils.locationToString(playerAxis.getPoint1()) + ")");
+								} else if(interactEvent.getAction() == Action.RIGHT_CLICK_BLOCK) {
+									playerAxis.setPoint2(interactEvent.getClickedBlock().getLocation());
+									ply.sendMessage("§4Set Second Position (" + Utils.locationToString(playerAxis.getPoint2()) + ")");
+								}
+								MapUtils.setAxis(plugin.getPlayerAxisMap(), ply, playerAxis);
 							}
-							MapUtils.setAxis(plugin.getPlayerAxisMap(), ply, playerAxis);
 						}
 					}
 				}

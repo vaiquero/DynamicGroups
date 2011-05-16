@@ -41,13 +41,10 @@ public class blockListener extends BlockListener {
 	}
 	
 	public boolean cancel(Location block, Player ply) {
+		//Debug? Kinda how it will work in the finished Copy.
 		for(Region rgn : plugin.getRegionList()) {
 			if(rgn.isInRegion(block)) {
-				ply.sendMessage("You are in " + rgn.getRegionName());
-				if(rgn.containsUser(ply.getName())) {
-					ply.sendMessage("You can build");
-				} else {
-					ply.sendMessage("You cannot build");
+				if(!rgn.containsUser(ply.getName())) {
 					return true;
 				}
 			}

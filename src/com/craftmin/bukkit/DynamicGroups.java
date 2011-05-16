@@ -1,6 +1,7 @@
 package com.craftmin.bukkit;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +32,15 @@ public class DynamicGroups extends JavaPlugin {
 	private HashMap<String, Axis> playerAxisMap = new HashMap<String, Axis>();
 	private List<Region> regionList = new ArrayList<Region>();
 	
+	private Settings settings = null;
+	
 
 	@Override
 	public void onDisable() {
-		//Clear all Arrays, List's & Maps
+		playerToolMap.clear();
+		playerAxisMap.clear();
+		regionList.clear();
+		writeConsole("Cleared Data, Disabled");
 	}
 
 	@Override
@@ -48,6 +54,8 @@ public class DynamicGroups extends JavaPlugin {
 		}
 		
 		addHooks();
+		
+		setupConfig();
 		
 		loadWorldRegions();
 		
@@ -63,8 +71,27 @@ public class DynamicGroups extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGE, internalBlockListener, Priority.Highest, this);
 	}
 	
-	public Region getRegion(File regionFile) {
+	public void setupConfig() {
+		String path = "plugins/DynamicGroups/dynamicgroups.cfg";
+		File workPath = new File(path);
+		if(!workPath.exists()) {
+			try {
+				workPath.createNewFile();
+			} catch (IOException e) {
+				writeConsole("Issue Creating config: " + e.getMessage());
+				return;
+			}
+		}
+		Configuration config = new Configuration(workPath);
+		config.load();
+		
+		settings = new Settings();
+		settings.setSelectionToolID(config.getInt("selectiontoolid", 276));
+		
+		config.save();
+	}
 	
+	public Region getRegion(File regionFile) {	
 		Configuration config = new Configuration(regionFile);
 		config.load();
 
@@ -197,6 +224,14 @@ public class DynamicGroups extends JavaPlugin {
 
 	public List<Region> getRegionList() {
 		return regionList;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
+
+	public Settings getSettings() {
+		return settings;
 	}
 	
 }

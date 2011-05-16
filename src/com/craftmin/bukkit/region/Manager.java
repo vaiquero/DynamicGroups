@@ -12,10 +12,10 @@ import com.craftmin.bukkit.misc.Utils;
 public class Manager {
 
 	public static boolean saveRegion(DynamicGroups plugin, Region region) {
-		return saveRegion(plugin, region.getWorldName(), region.getAxis(), region.getRegionName(), region.getUserListString());
+		return saveRegion(plugin, region.getWorldName(), region.getAxis(), region.isVisitorBuild(), region.getRegionName(), region.getOwner(), region.getUserListString());
 	}
 	
-	public static boolean saveRegion(DynamicGroups plugin, String WorldName, Axis axis, String RegionName, String Users) {
+	public static boolean saveRegion(DynamicGroups plugin, String WorldName, Axis axis, boolean vBuild, String RegionName, String Owner, String Users) {
 		String savePath = "plugins/DynamicGroups/WorldData/";
 		Utils.setupWorldPaths(savePath, plugin.getServer());
 		
@@ -34,6 +34,8 @@ public class Manager {
 		config.setProperty("Vector.Second", Utils.locationToString(axis.getPoint2()));
 		config.setProperty("Users", Users);
 		config.setProperty("World", WorldName);
+		config.setProperty("Owner", Owner);
+		config.setProperty("VisitorsBuild", vBuild);
 		return config.save();
 	}
 	

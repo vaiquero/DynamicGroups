@@ -29,6 +29,9 @@ public class CommandParser {
 					} case CommandDefinition.Command.COMMAND_LISTREGIONS: {
 						Command.listRegions(player, plugin);
 						break;
+					} case CommandDefinition.Command.COMMAND_GROUPCHAT: {
+						Command.groupChat(player, Commands, plugin);
+						break;
 					} default: {
 						//Unknown DG Command
 						break;
