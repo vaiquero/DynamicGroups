@@ -31,9 +31,4 @@ public class Axis {
 		return point2;
 	}
 	
-	@Override
-	public String toString() {
-		return "";
-	}
-	
 }

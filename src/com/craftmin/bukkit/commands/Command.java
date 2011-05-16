@@ -1,5 +1,6 @@
 package com.craftmin.bukkit.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -12,16 +13,20 @@ import com.craftmin.bukkit.region.Region;
 public class Command {
 
 	public static boolean selectRegion(Player player, DynamicGroups plugin) {
-		if(MapUtils.isToolOn(plugin.getPlayerToolMap(), player)) {
-			MapUtils.setTool(plugin.getPlayerToolMap(), player, false);
-			player.sendMessage("Region Selecting is now Turned Off.");
+		int ToolID = plugin.getSettings().getSelectionToolID();
+		if(player.getItemInHand().getTypeId() == ToolID) {
+			if(MapUtils.isToolOn(plugin.getPlayerToolMap(), player)) {
+				MapUtils.setTool(plugin.getPlayerToolMap(), player, false);
+				player.sendMessage("Region Selecting is now Turned Off.");
+			} else {
+				MapUtils.setTool(plugin.getPlayerToolMap(), player, true);
+				player.sendMessage("Region Selecting is now Turned On.");
+			}
 		} else {
-			MapUtils.setTool(plugin.getPlayerToolMap(), player, true);
-			player.sendMessage("Region Selecting is now Turned On.");
+			player.sendMessage("Please hold an ID " + String.valueOf(ToolID));
 		}
 		return false;
 	}
-	
 
 	public static boolean saveRegion(Player player, String[] Args, DynamicGroups plugin) {
 		if(plugin.getPlayerAxisMap() != null) {
@@ -36,6 +41,8 @@ public class Command {
 					
 					Region createdRegion = new Region(bVecPos1, bVecPos2, player.getWorld().getName(), Args[2]);
 					plugin.getRegionList().add(createdRegion);
+					
+					createdRegion.setOwner(player.getName().trim().toLowerCase());
 					
 					if(createdRegion.save(plugin)) {
 						player.sendMessage("Saved Region '" + Args[2] + "' Successfully.");
@@ -172,4 +179,34 @@ public class Command {
 		}
 	}
 	
+	public static void groupChat(Player player, String[] Args, DynamicGroups plugin) {
+		//Player has to be in Region to chat.
+		boolean inRegion = false;
+		if(Args.length > 2) {
+			String Message = Utils.mergeArray(Args, 2).trim();
+			if(Message.trim().length() > 0) {
+				for(Region rgn : plugin.getRegionList()) {
+					if(rgn.isInRegion(player.getLocation())) {
+						if(rgn.containsUser(player.getName())) {
+							for(String ply : rgn.getUserList()) {
+								Player msgPly = plugin.getServer().getPlayer(ply);
+								if(msgPly != null) {
+									msgPly.sendMessage(ChatColor.DARK_GREEN + 
+											"[" + rgn.getRegionName() + "] " + ChatColor.GRAY +
+											player.getName() + ChatColor.DARK_GRAY + ": " +
+											ChatColor.WHITE +
+											Message);
+
+									inRegion = true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if(!inRegion) {
+			player.sendMessage(ChatColor.BLUE + "You need to be in a Region & It's Group to Chat");
+		}
+	}
 }

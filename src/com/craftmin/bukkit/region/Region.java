@@ -15,6 +15,8 @@ public class Region {
 	private Vector point2 = null;
 	private String worldName = null;
 	private String regionName = null;
+	private String owner = "";
+	private boolean visitorBuild = false;
 	private List<String> userList = new ArrayList<String>();
 		
 	public Region(Vector Pos1, Vector Pos2, String WorldName, String RegionName) {
@@ -134,6 +136,20 @@ public class Region {
 	
 	public boolean save(DynamicGroups plugin) {
 		return Manager.saveRegion(plugin, this);
+	}
+	
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+	
+	public String getOwner() {
+		return owner;
+	}
+	public void setVisitorBuild(boolean visitorBuild) {
+		this.visitorBuild = visitorBuild;
+	}
+	public boolean isVisitorBuild() {
+		return visitorBuild;
 	}
 	
 }
